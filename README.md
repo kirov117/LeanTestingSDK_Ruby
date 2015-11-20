@@ -264,3 +264,45 @@ LT.platform.browsers.find(1).versions.all.toArray
 ```
 
 ######~~/////////////////////////////////////////////////////////////////////////////////////~~
+
+- Using **Filters**
+```ruby
+LT.projects.find(3515).bugs.all({'limit' => 2, 'page' => 5}).toArray
+```
+
+- **Entity List** Functions
+```ruby
+browsers = LT.platform.browsers.all
+p browsers.total
+p browsers.totalPages
+p browsers.count
+p browsers.toArray
+```
+
+- **Entity List** Iterator
+When used in for loops, entity lists will automatically cycle to first page, regardless of `page` filter.
+After ending the loop, the entity list will **NOT** revert to first page or the initial instancing `page` filter setting in order not to cause useless API request calls.
+```ruby
+comments = LT.bugs.find(38483).comments.all({'limit' => 1})
+comments.each{ |page| p page }
+```
+
+- **Entity List** Manual Iteration
+```ruby
+comments = LT.bugs.find(38483).comments.all({'limit' => 1})
+p comments.toArray
+
+# Will return false if unable to move forwards
+comments.next;      p comments.toArray
+
+# Will return false if already on last page
+comments.last;      p comments.toArray
+
+# Will return false if unable to move backwards
+comments.previous;  p comments.toArray
+
+# Will return false if already on first page
+comments.first;     p comments.toArray
+```
+
+######~~/////////////////////////////////////////////////////////////////////////////////////~~

@@ -2,7 +2,6 @@
 # An EntityList is a list of Entity objects, obtained from compiling the results of an all() call.
 #
 class EntityList
-	include Enumerable
 
 	@origin     = nil # Reference to originating Client instance
 
@@ -13,7 +12,6 @@ class EntityList
 	@filters    = nil # Filter list for generation (origins in Handler call)
 
 	@pagination = nil # Pagination object as per response (without links)
-	@realPage   = nil # Effective virtual paginator for out-of-bounds scenarios
 
 	#
 	# Constructs an Entity List instance.
@@ -35,12 +33,6 @@ class EntityList
 		@identifier = identifier
 		@filters    = filters
 
-		if filters.has_key? 'page'
-			@realPage = filters['page']
-		else
-			@realPage = 1
-		end
-
 		generateCollectionData
 
 	end
@@ -50,12 +42,11 @@ class EntityList
 	#
 	def first
 		if @pagination['current_page'] == 1
-			return
+			return false
 		end
 
 		@filters['page'] = 1
 		generateCollectionData
-		@realPage = 1
 	end
 
 	#
@@ -63,18 +54,21 @@ class EntityList
 	#
 	def previous
 		if @pagination['current_page'] == 1
-			return
+			return false
 		end
 
 		@filters['page'] -=1
 		generateCollectionData
-		@realPage -=1
 	end
 
 	#
 	# Sets iterator position to next page. Ignored if on last page.
 	#
 	def next
+		if @pagination['current_page'] == @pagination['total_pages']
+			return false
+		end
+
 		if @filters.has_key? 'page'
 			@filters['page'] += 1
 		else
@@ -82,7 +76,6 @@ class EntityList
 		end
 
 		generateCollectionData
-		@realPage += 1
 	end
 
 	#
@@ -90,12 +83,21 @@ class EntityList
 	#
 	def last
 		if @pagination['current_page'] == @pagination['total_pages']
-			return
+			return false
 		end
 
 		@filters['page'] = @pagination['total_pages']
 		generateCollectionData
-		@realPage = @pagination['total_pages']
+	end
+
+	#
+	# Internal loop handler for emulating enumerable functionality
+	#
+	def each
+		first
+		begin
+			yield toArray
+		end while self.next
 	end
 
 	#
@@ -136,9 +138,6 @@ class EntityList
 	#
 	def toArray
 		@collection.map{ |entity| entity.data }
-	end
-
-	def each
 	end
 
 	private
