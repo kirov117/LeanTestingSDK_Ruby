@@ -4,7 +4,7 @@
 # https://leantesting.com/en/api-docs Adheres to official API guidelines
 #
 
-require_relative('loader.rb')
+require_relative 'loader.rb'
 
 # require_relative('Handler/User/UserHandler')
 
@@ -16,6 +16,8 @@ class RubyClient
 		:bugs,
 		:attachments,
 		:platform
+
+	attr_accessor :debugReturn
 
 	def initialize
 		@accessToken = nil

@@ -38,6 +38,8 @@ class ProjectBugsHandler < EntityHandler
 		end
 
 		if enforce(fields, supports)
+			fields = {'include' => 'steps,platform'}.merge(fields)
+
 			req = APIRequest.new(
 				@origin,
 				'/v1/projects/' + @projectID.to_s() + '/bugs',
@@ -55,6 +57,8 @@ class ProjectBugsHandler < EntityHandler
 		end
 
 		super
+
+		filters = {'include' => 'steps,platform,attachments,comments,tags'}.merge(filters)
 
 		request = APIRequest.new(@origin, '/v1/projects/' + @projectID.to_s() + '/bugs', 'GET')
 		EntityList.new(@origin, request, Bug, filters)

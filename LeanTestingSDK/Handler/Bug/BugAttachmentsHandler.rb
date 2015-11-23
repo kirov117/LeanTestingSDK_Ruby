@@ -42,6 +42,8 @@ class BugAttachmentsHandler < EntityHandler
 			filters = {}
 		end
 
+		super
+
 		request = APIRequest.new(@origin, '/v1/bugs/' + @bugID.to_s() + '/attachments', 'GET')
 		EntityList.new(@origin, request, BugAttachment, filters)
 	end

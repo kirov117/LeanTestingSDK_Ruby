@@ -3,7 +3,16 @@ class BugsHandler < EntityHandler
 	def find(id)
 		super
 
-		req = APIRequest.new(@origin, '/v1/bugs/' + id.to_s(), 'GET')
+		req = APIRequest.new(
+			@origin,
+			'/v1/bugs/' + id.to_s(),
+			'GET',
+			{
+				'params' => {
+					'include' => 'steps,platform,attachments,comments,tags'
+				}
+			}
+		)
 		Bug.new(@origin, req.exec)
 	end
 
@@ -38,6 +47,8 @@ class BugsHandler < EntityHandler
 		}
 
 		if enforce(fields, supports)
+			fields = {'include' => 'steps,platform'}.merge(fields)
+
 			req = APIRequest.new(@origin, '/v1/bugs/' + id.to_s(), 'PUT', {'params' => fields})
 			Bug.new(@origin, req.exec)
 		end

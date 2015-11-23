@@ -2,6 +2,7 @@
 # An EntityList is a list of Entity objects, obtained from compiling the results of an all() call.
 #
 class EntityList
+	attr_reader :collection
 
 	@origin     = nil # Reference to originating Client instance
 

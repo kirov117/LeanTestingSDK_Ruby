@@ -7,6 +7,8 @@ class PlatformBrowsersHandler < EntityHandler
 
 		super
 
+		filters = {'include' => 'versions'}.merge(filters)
+
 		request = APIRequest.new(@origin, '/v1/platform/browsers', 'GET')
 		EntityList.new(@origin, request, PlatformBrowser, filters)
 	end
@@ -14,7 +16,7 @@ class PlatformBrowsersHandler < EntityHandler
 	def find(id)
 		super
 
-		req = APIRequest.new(@origin, '/v1/platform/browsers/' + id.to_s(), 'GET')
+		req = APIRequest.new(@origin, '/v1/platform/browsers/' + id.to_s(), 'GET', {'params' => {'include' => 'versions'}})
 		PlatformBrowser.new(@origin, req.exec)
 	end
 
