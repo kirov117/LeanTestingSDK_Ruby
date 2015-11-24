@@ -12,6 +12,9 @@ Gem::Specification.new do |s|
 	s.license     = 'Proprietary'
 	s.require_path= 'LeanTestingSDK'
 
+	s.add_dependency('json', '~> 1.8')
 	s.add_dependency('curb', '~> 0.8')
-	s.add_dependency('mocha', '~> 1.0')
+
+	s.add_dependency('minitest', '~> 5.8')
+	s.add_dependency('mocha', '~> 1.1')
 end

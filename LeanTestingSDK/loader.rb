@@ -1,6 +1,6 @@
 # Global inclusions
-require 'json'
-require 'curl'
+require 'bundler'
+Bundler.require(:default)
 
 # Relative autopath inclusion
 sdkRoot = File.dirname(File.absolute_path(__FILE__))

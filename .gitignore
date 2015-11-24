@@ -2,3 +2,4 @@
 LeanTestingSDK/.old
 runtime.rb
 _tests.rb
+Gemfile.lock
